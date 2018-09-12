@@ -5,9 +5,10 @@ import Sausage from './sausage.js'
 import { drawImage, randomint, timestamp, text } from './util.js'
 import { playsound } from './sound.js'
 import Van from './van.js'
-import House from './house.js';
-import Thing from './thing.js';
-import Bridge from './bridge.js';
+import House from './house.js'
+import Thing from './thing.js'
+import Bridge from './bridge.js'
+import Tree from './tree.js'
 import * as vg from './mv.js'
 import { data, palette } from './data.js'
 
@@ -20,6 +21,9 @@ const GAMESTATE = {
     'GAME': 5,
     'GAMEOVER': 6
 }
+
+const LEFT_HAND_MULTIPLIER = 8 // keyboard
+const RIGHT_HAND_MULTIPLIER = 3 // mouse
 
 class PlayState {
     constructor(c, i) {
@@ -98,43 +102,47 @@ class PlayState {
         this.grassInc = 0.25
 
         this.giant = new Giant(428, 345, this.imgs)
-        this.beer = new Beer(2000, 317 - 86, this.imgs)
+        //this.beer = new Beer(2000, 317 - 86, this.imgs)
         this.van = new Van(20, 553, this.imgs)
-        this.house = new House(800, 404, this.imgs)
+        this.house = new House(1700, 404, this.imgs)
+        this.tree = new Tree(1400, 230, this.imgs)
 
-        this.sausage = new Sausage(3000, 317 - 86, this.imgs)
+        //this.sausage = new Sausage(3000, 317 - 86, this.imgs)
 
         this.things = []
         
-        this.thing1 = new Thing(2200, 553, this.imgs, 30, this.imgs[30].width, this.imgs[30].height, true, 'vans')
+        /*this.thing1 = new Thing(2200, 553, this.imgs, 30, this.imgs[30].width, this.imgs[30].height, true, 'vans')
         this.thing2 = new Thing(1500, 530, this.imgs, 23, this.imgs[23].width, this.imgs[23].height, false, 'tractors')
 
         this.thing1.alts = [ 30, 31, 32, 33 ] // van
         this.thing2.alts = [ 23, 34, 35 ] // tractor
         this.thing1.changeCostume();
-        this.thing2.changeCostume();
+        this.thing2.changeCostume();*/
 
-        this.bridge = new Bridge(1400, 692, this.imgs)
+        /*this.bridge = new Bridge(1400, 692, this.imgs)
         this.global.pushthese.push(this.bridge)
-        this.global.collide.push(this.bridge)
+        this.global.collide.push(this.bridge)*/
 
-        this.things.push(this.thing1)
-        this.things.push(this.thing2)
-        this.things.push(this.beer)
+        //this.things.push(this.thing1)
+        //this.things.push(this.thing2)
+        //this.things.push(this.beer)
         this.things.push(this.house)
-        this.things.push(this.sausage)
+        //this.things.push(this.sausage)
+        this.things.push(this.tree)
 
-        this.global.grabthese.push(this.beer)
+        /*this.global.grabthese.push(this.beer)
         this.global.grabthese.push(this.thing1)
         this.global.grabthese.push(this.thing2)
-        this.global.grabthese.push(this.sausage)
+        this.global.grabthese.push(this.sausage)*/
+        this.global.grabthese.push(this.tree)
         
         this.global.bashthese.push(this.house)
         this.global.collide.push(this.house)
-        this.global.collide.push(this.beer)
+        /*this.global.collide.push(this.beer)
         this.global.collide.push(this.thing1)
         this.global.collide.push(this.thing2)
-        this.global.collide.push(this.sausage)
+        this.global.collide.push(this.sausage)*/
+        this.global.collide.push(this.tree)
 
 
         // generate the two bg layers
@@ -207,8 +215,14 @@ class PlayState {
 
     renderOverlay(c, i, l, r) {
         this.renderBackground(c)
-        this.renderFG(c)
         this.drawDialog(c, this.text[i], l, r)
+        if(this.tree) {
+            this.tree.render(c)
+        }
+        this.renderFG(c)
+        if(this.house) {
+            this.house.render(c)
+        }
     }
 
     renderTitle(ctx) {
@@ -230,7 +244,7 @@ class PlayState {
     renderGame(ctx) {
         this.renderBackground(ctx)
         this.giant.render(ctx)
-        this.beer.render(ctx)
+        //this.beer.render(ctx)
 
         // render the van/vehicles
         this.van.render(ctx)
@@ -241,14 +255,13 @@ class PlayState {
 
         this.renderFG(ctx)
         this.house.render(ctx)
-        this.bridge.render(ctx)
+        //this.bridge.render(ctx)
 
         if(this.shaking) {
             ctx.shakeScreen(ctx, 0, randomint(-25, 25))
 
             if(timestamp() >= this.shake_timestamp) {
                 this.shaking = false
-                //console.log('off')
             }
         }
     }
@@ -383,7 +396,19 @@ class PlayState {
             }
         }
 
-        // TODO - add trees
+        if(this.tree) {
+            this.tree.x -= this.speed
+            if(this.tree.x < -300) {
+                this.tree.x = 1400
+            }
+        }
+        if(this.house) {
+            this.house.x -= this.speed
+            if(this.house.x < -300) {
+                this.house.x = 1400
+                this.house.changeCostume()
+            }
+        }
     }
 
     updateGame() {
@@ -392,9 +417,8 @@ class PlayState {
         this.giant.update(this.global)
         this.van.update()
         
-        this.bridge.update()
+        //this.bridge.update()
 
-        this.house.update()
         this.things.forEach(t => {
             t.update()
         })
@@ -423,7 +447,7 @@ class PlayState {
                     t.x -= this.speed
                 }
             })
-            this.bridge.x -= this.speed
+            //this.bridge.x -= this.speed
         }
         if(this.offset1 < -310) {
             this.offset1 = -10
@@ -506,7 +530,7 @@ class PlayState {
 
     handleMove(mx, my) {
         if(this.state === GAMESTATE.GAME) {
-            this.giant.righthand.set(mx,my, 3)
+            this.giant.righthand.set(mx,my, RIGHT_HAND_MULTIPLIER)
 
             let br = this.giant.righthand.collideWith(this.global.bashthese)
             if(br.r) {
@@ -632,7 +656,7 @@ class PlayState {
             b = 15
         }
 
-        this.giant.lefthand.move(a, b, 30 + randomint(0, 20))
+        this.giant.lefthand.move(a, b, LEFT_HAND_MULTIPLIER)
     }
 
     /* ------------- Gamepad code -------------- */

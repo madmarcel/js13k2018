@@ -75,15 +75,16 @@ class Thing extends Grabbable {
         }
 
         /*
-        c.strokeStyle = 'red';
-        c.beginPath();
+        c.strokeStyle = 'red'
+        c.beginPath()
         c.rect(this.hbx, this.hby, this.hbw, this.hbh);
-        c.stroke();
+        c.stroke()
 
-        c.strokeStyle = 'black';
-        c.beginPath();
+        c.strokeStyle = 'black'
+        c.beginPath()
         c.rect(this.gx, this.gy, this.gw, this.gh)
-        c.stroke();*/
+        c.stroke()
+        */
     }
 
     reset() {

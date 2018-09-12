@@ -58,7 +58,12 @@ class Grabber {
         if(this.target) {
             this.target.moveGrab(this.gx, this.gy)
 
-            if((this.target.isExhausted() || this.target.canBeChucked())&& this.target.gy < 80) {
+            let offset = 80
+            if(this.target.releaseOffset) {
+                offset = this.target.releaseOffset
+            }
+
+            if((this.target.isExhausted() || this.target.canBeChucked()) && this.target.gy < offset) {
                 this.target.releaseAction()
                 this.target = null
             }

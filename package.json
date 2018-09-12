@@ -49,6 +49,7 @@
     "handlebars": "^4.0.11",
     "node-static": "^0.7.10",
     "rollup-plugin-local-resolve": "^1.0.7",
+    "rollup-plugin-terser": "^2.0.2",
     "rollup-stream": "^1.24.1",
     "terser-webpack-plugin": "^1.0.2",
     "vinyl-buffer": "^1.0.1",
@@ -58,6 +59,8 @@
   },
   "dependencies": {
     "gzip-size-cli": "^3.0.0",
+    "html-inline": "^1.2.0",
+    "html-minifier": "^3.5.20",
     "pretty-bytes-cli": "^2.0.0",
     "run-sequence": "^2.2.1",
     "terser": "^3.8.2"
