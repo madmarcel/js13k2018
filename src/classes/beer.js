@@ -27,6 +27,7 @@ class Beer extends Grabbable {
         this.hbw = this.c[13].width
         this.hbh = this.c[13].height
         this.flip = false
+        this.doReset = false
     }
 
     render(c, override) {
@@ -107,14 +108,18 @@ class Beer extends Grabbable {
     }
 
     reset() {
-        this.x = 3000 + randomint(200, 300)
-        this.y = 317 - 86
-        this.state = STATE.STANDING
-        this.energy = 100;
-        this.ts = timestamp()
-        this.grabbed = false
-        this.flip = false
-        this.sendEaten2()
+        if(this.doReset) {
+            this.x = 3000 + randomint(200, 300)
+            this.y = 317 - 86
+            this.state = STATE.STANDING
+            this.energy = 100;
+            this.ts = timestamp()
+            this.grabbed = false
+            this.flip = false
+        } else {
+            this.sendEaten2()
+            this.dead = true
+        }
     }
 
     isFalling() {

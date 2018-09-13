@@ -32,6 +32,8 @@ class Grabbable {
 
         this.dead = false
         this.name = name
+        this.doReset = false
+        this.haveSentEvent = false
     }
 
     update() {
@@ -105,8 +107,11 @@ class Grabbable {
     }
 
     sendEvent(t) {
-        const e = new CustomEvent('s', { detail: { 'n': this.name, 't': t}})
-        window.dispatchEvent(e)
+        if(!this.haveSentEvent) {
+            const e = new CustomEvent('s', { detail: { 'n': this.name, 't': t}})
+            window.dispatchEvent(e)
+            this.haveSentEvent = true
+        }
     }
     sendEaten() {
         this.sendEvent('e')

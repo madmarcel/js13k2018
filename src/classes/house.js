@@ -20,6 +20,9 @@ class House {
         this.i = 22
         this.flip = false
         this.changeCostume()
+        this.doReset = true
+        this.dead = false
+        this.sendEvent = false
     }
 
     changeCostume() {
@@ -41,13 +44,22 @@ class House {
     }
 
     reset() {
-        this.x = 1500 + randomint(0, 1000)
-        this.y = this.oldy
-        this.bashed = false
-        this.changeCostume()
-        this.flip = !this.flip
-        const e = new CustomEvent('s', { detail: { 'n': 'houses' }})
-        window.dispatchEvent(e)
+        if(this.doReset) {
+            this.x = 1500 + randomint(0, 1000)
+            this.y = this.oldy
+            this.bashed = false
+            this.changeCostume()
+            this.flip = !this.flip
+            const e = new CustomEvent('s', { detail: { 'n': 'houses' }})
+            window.dispatchEvent(e)
+        } else {
+            this.dead = true
+            if(this.sendEvent) {
+                const e = new CustomEvent('s', { detail: { 'n': 'houses' }})
+                window.dispatchEvent(e)
+                this.sendEvent = true
+            }
+        }
     }
 
     update() {

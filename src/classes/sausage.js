@@ -25,6 +25,7 @@ class Sausage extends Grabbable{
         this.busy = false
         this.ts = timestamp()
         this.flip = false
+        this.doReset = false
     }
 
     render(c, override) {
@@ -88,15 +89,20 @@ class Sausage extends Grabbable{
     }
 
     reset() {
-        this.x = 2300 + randomint(200, 300)
-        this.y = 317 - 86
-        this.hbx = this.x
-        this.hby = this.y
-        this.state = STATE.STANDING
-        this.dead = false
-        this.busy = false
-        this.flip = false
-        this.sendEaten2()
+        if(this.doReset) {
+            this.x = 2300 + randomint(200, 300)
+            this.y = 317 - 86
+            this.hbx = this.x
+            this.hby = this.y
+            this.state = STATE.STANDING
+            this.dead = false
+            this.busy = false
+            this.flip = false
+        } else {
+            this.sendEaten2()
+            this.x = -400
+            this.dead = true
+        }
     }
 
     isInAction() {

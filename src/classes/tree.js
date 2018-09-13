@@ -29,10 +29,12 @@ class Tree extends Thing {
     }
     reset() {
         super.reset()
-        this.x = 1400
-        this.y = this.oldy + randomint(0, 40)
-        this.particles = []
-        this.pcount = 25
+        if(this.doReset) {
+            this.x = 1400
+            this.y = this.oldy + randomint(0, 40)
+            this.particles = []
+            this.pcount = 25
+        }
     }
 
     update() {

@@ -40,13 +40,13 @@ class Hand extends Grabber {
         */
     }
 
-    update(global) {
+    update(grabthese) {
         super.update()
         this.hbx = this.x + 50
         this.hby = this.y - 50
 
         if(!this.target) {
-            global.grabthese.forEach(g => {
+            grabthese.forEach(g => {
                 this.grabThing(g, this.flip)
             })
         }

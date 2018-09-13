@@ -36,10 +36,10 @@ class Giant {
         this.righthand.render(c)
     }
 
-    update(global) {
-        this.head.update(global)
-        this.lefthand.update(global)
-        this.righthand.update(global)
+    update(grabthese) {
+        this.head.update(grabthese)
+        this.lefthand.update(grabthese)
+        this.righthand.update(grabthese)
 
         if(this.count > 8) {
             this.count = 0

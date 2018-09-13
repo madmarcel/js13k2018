@@ -11,6 +11,7 @@ import Bridge from './bridge.js'
 import Tree from './tree.js'
 import * as vg from './mv.js'
 import { data, palette } from './data.js'
+import Level from './level.js'
 
 const GAMESTATE = {
     'LOADING': 0,
@@ -22,8 +23,8 @@ const GAMESTATE = {
     'GAMEOVER': 6
 }
 
-const LEFT_HAND_MULTIPLIER = 8 // keyboard
-const RIGHT_HAND_MULTIPLIER = 3 // mouse
+const LEFT_HAND_MULTIPLIER = 1 // 8 // keyboard
+const RIGHT_HAND_MULTIPLIER = 1 // 3 mouse
 
 class PlayState {
     constructor(c, i) {
@@ -35,7 +36,7 @@ class PlayState {
         this.state = GAMESTATE.LOADING
 
         this.text = [ ['*HANS FIXES','*THE INTERNET', '', 'made for js13k 2018', '', 'code & art by', 'madmarcel', '', 'best played with the dual analog', 'sticks on a gamepad'],
-            ['*Oh no!','Hans the Giants internet connection has broken.','He can\'t visit his favourite site:', 'www.giantsausages.com', 'Hans is very upset.','','The ISP has sent a very impatient man in an', 'orange van to fix Hans\' internet.', '', 'Help the man in the van get to Hans\' giant house.', ''],
+            ['*Oh no!','Hans the Giants internet connection has broken.','He can\'t visit his favourite site:', 'www.giantsausages.com', 'Hans is very upset','','The ISP has sent a very impatient man in an', 'orange van to fix Hans\' internet', '', 'Don\'t make him wait', ''],
             ['*Hand Controls', 'Use either', '', 'dual analog stick on gamepad', '', 'or', '', 'mouse + arrow keys', '', 'to control Hans the Giants fists', ''],
             ['*How to Giant', 'Don\'t keep the man in the van waiting too long!','', 'Smash buildings, flatten bridges.', '', 'Eat or chuck cars & tractors','(Raise things to top of screen to chuck)', '', 'Chuck trees - no veggies for Hans ;)', '', 'Eat and drink all the beer and sausages (Huzzah!)'],
             ['*GAME OVER', 'You have', '-----------', '', '', '', '', '', '', '']
@@ -80,12 +81,12 @@ class PlayState {
     }
 
     init() {
-        this.global = {
+        /*this.global = {
             grabthese: [],
             bashthese: [],
             collide: [],
             pushthese: []
-        }
+        }*/
 
         this.stats = {
             'vans': { 'e': 0, 'd': 0 },
@@ -101,15 +102,17 @@ class PlayState {
         this.grassRot = -10
         this.grassInc = 0.25
 
+        this.level = new Level(this.imgs)
+        this.level.init()
         this.giant = new Giant(428, 345, this.imgs)
         //this.beer = new Beer(2000, 317 - 86, this.imgs)
         this.van = new Van(20, 553, this.imgs)
-        this.house = new House(1700, 404, this.imgs)
-        this.tree = new Tree(1400, 230, this.imgs)
+        //this.house = new House(3400, 404, this.imgs)
+        this.tree = new Tree(1700, 230, this.imgs)
 
         //this.sausage = new Sausage(3000, 317 - 86, this.imgs)
 
-        this.things = []
+        //this.things = []
         
         /*this.thing1 = new Thing(2200, 553, this.imgs, 30, this.imgs[30].width, this.imgs[30].height, true, 'vans')
         this.thing2 = new Thing(1500, 530, this.imgs, 23, this.imgs[23].width, this.imgs[23].height, false, 'tractors')
@@ -126,23 +129,23 @@ class PlayState {
         //this.things.push(this.thing1)
         //this.things.push(this.thing2)
         //this.things.push(this.beer)
-        this.things.push(this.house)
+        //this.things.push(this.house)
         //this.things.push(this.sausage)
-        this.things.push(this.tree)
+        //this.things.push(this.tree)
 
         /*this.global.grabthese.push(this.beer)
         this.global.grabthese.push(this.thing1)
         this.global.grabthese.push(this.thing2)
         this.global.grabthese.push(this.sausage)*/
-        this.global.grabthese.push(this.tree)
+        //this.global.grabthese.push(this.tree)
         
-        this.global.bashthese.push(this.house)
-        this.global.collide.push(this.house)
+        //this.global.bashthese.push(this.house)
+        //this.global.collide.push(this.house)
         /*this.global.collide.push(this.beer)
         this.global.collide.push(this.thing1)
         this.global.collide.push(this.thing2)
         this.global.collide.push(this.sausage)*/
-        this.global.collide.push(this.tree)
+        //this.global.collide.push(this.tree)
 
 
         // generate the two bg layers
@@ -179,10 +182,6 @@ class PlayState {
         this.shaking = false
         this.shake_timestamp = 0
         this.gcount = 0
-    }
-
-    generateLevel() {
-
     }
 
     drawDialog(c, dtext, left, right) {
@@ -249,12 +248,15 @@ class PlayState {
         // render the van/vehicles
         this.van.render(ctx)
 
+        this.level.render(ctx)
+
+        /*
         this.things.forEach(t => {
             t.render(ctx)
-        })
+        })*/
 
-        this.renderFG(ctx)
-        this.house.render(ctx)
+        //this.renderFG(ctx)
+        //this.house.render(ctx)
         //this.bridge.render(ctx)
 
         if(this.shaking) {
@@ -310,7 +312,7 @@ class PlayState {
         this.renderGrass(ctx, 15, 768 - 122, this.goffset)
 
         // render the ground blocks
-        this.renderGround(ctx, 15, 768 - 95, 0) //this.goffset)
+        this.renderGround(ctx, 15, 768 - 95, this.goffset)
     }
 
     renderBG(ctx, tree, qty, Yoffset, Xoffset) {
@@ -399,13 +401,13 @@ class PlayState {
         if(this.tree) {
             this.tree.x -= this.speed
             if(this.tree.x < -300) {
-                this.tree.x = 1400
+                this.tree.x = 1700
             }
         }
         if(this.house) {
             this.house.x -= this.speed
             if(this.house.x < -300) {
-                this.house.x = 1400
+                this.house.x = 3400
                 this.house.changeCostume()
             }
         }
@@ -414,19 +416,22 @@ class PlayState {
     updateGame() {
         this.checkGamePads()
         this.updateKeys()
-        this.giant.update(this.global)
+        this.giant.update(this.level.grab)
         this.van.update()
+        this.level.update()
         
         //this.bridge.update()
 
-        this.things.forEach(t => {
+        /*this.things.forEach(t => {
             t.update()
-        })
+        })*/
 
-        if(this.van.collideWith(this.global.collide)) {
+        if(this.van.collideWith(this.level.collide)) {
             this.stopped = true
+            this.level.stopped = true
         } else {
             this.stopped = false
+            this.level.stopped = false
         }
 
         // bg offset
@@ -442,13 +447,17 @@ class PlayState {
                 }
             }
 
-            this.things.forEach(t => {
+            this.level.speed = this.speed
+
+
+            /*this.things.forEach(t => {
                 if(!t.grabbed) {
                     t.x -= this.speed
                 }
-            })
+            })*/
             //this.bridge.x -= this.speed
         }
+        
         if(this.offset1 < -310) {
             this.offset1 = -10
         }
@@ -459,17 +468,18 @@ class PlayState {
             this.goffset = -10
             if(this.gcount > 40) {
                 this.speed++
+                this.van.rotinc += 0.5
                 this.gcount = 0
             }
             this.gcount++
         }
-
+        /*
         // the grass is animated
         this.grassRot += this.grassInc
         if(this.grassRot > 15 || this.grassRot < -15) {
             this.grassInc *= -1
         }
-
+        */
         // ground offset
         for(let i = 0; i < this.clouds.length; i++) {
             this.clouds[i].x -= 0.1
@@ -478,8 +488,8 @@ class PlayState {
             }
         }
 
-        let bl = this.giant.lefthand.collideWith(this.global.bashthese)
-        let br = this.giant.righthand.collideWith(this.global.bashthese)
+        let bl = this.giant.lefthand.collideWith(this.level.bash)
+        let br = this.giant.righthand.collideWith(this.level.bash)
 
         if(bl.r) {
             //console.log('hit left', bl)
@@ -490,7 +500,7 @@ class PlayState {
             this.bashThing(br.o, br.c)
         }
 
-        if(this.giant.lefthand.push(this.global.pushthese) || this.giant.righthand.push(this.global.pushthese)) {
+        if(this.giant.lefthand.push(this.level.push) || this.giant.righthand.push(this.level.push)) {
             playsound(randomint(2,4))
             this.setShakeScreen(150)
         }
@@ -532,7 +542,7 @@ class PlayState {
         if(this.state === GAMESTATE.GAME) {
             this.giant.righthand.set(mx,my, RIGHT_HAND_MULTIPLIER)
 
-            let br = this.giant.righthand.collideWith(this.global.bashthese)
+            let br = this.giant.righthand.collideWith(this.level.bash)
             if(br.r) {
                 this.bashThing(br.o, br.c)
             }

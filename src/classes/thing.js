@@ -88,23 +88,26 @@ class Thing extends Grabbable {
     }
 
     reset() {
-        this.x = 1500 + randomint(0, 800)
-        this.y = this.oldy
-        this.dead = false
-        this.state = STATE.STANDING
-        this.grabbed = false
-        this.energy = 100
-        this.ts = timestamp()
-        this.flip = !this.flip
-        this.changeCostume()
-        this.busy = false
+        if(this.doReset) {
+            this.x = 1500 + randomint(0, 800)
+            this.y = this.oldy
+            this.dead = false
+            this.state = STATE.STANDING
+            this.grabbed = false
+            this.energy = 100
+            this.ts = timestamp()
+            this.flip = !this.flip
+            this.changeCostume()
+            this.busy = false
+        }
     }
 
     update() {
 
-        if(this.x < -200 || this.dead) {
+        if(!this.dead && this.x < -200 || this.dead) {
             this.sendDead()
             this.reset()
+            this.dead = true
         }
 
         super.update()

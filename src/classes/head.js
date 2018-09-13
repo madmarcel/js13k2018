@@ -83,8 +83,8 @@ class Head {
         c.stroke()*/
     }
 
-    update(global) {
-        global.grabthese.forEach(g => {
+    update(grabthese) {
+        grabthese.forEach(g => {
             if(this.checkHover(g)) {
                 if(!g.isExhausted()) {
                     if(!g.isInAction()) {

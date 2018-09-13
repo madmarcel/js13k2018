@@ -26,6 +26,8 @@ class Bridge {
         this.hby = this.y - 100
         this.hbw = 30
         this.hbh = 100
+
+        this.dead = false
     }
 
     reset(x) {
@@ -35,6 +37,7 @@ class Bridge {
         this.locked = false
         this.sproing = false
         this.sproingDist = (1366 / 2) + randomint(60, 200)
+        this.dead = false
     }
 
     render(c) {

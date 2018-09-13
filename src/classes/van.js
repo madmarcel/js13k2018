@@ -15,6 +15,7 @@ class Van {
         this.bob = 0
         this.inc = 1
         this.count = 0
+        this.rotinc = 2
 
         this.hbx = this.x + this.c[19].width - 30
         this.hby = this.y
@@ -23,7 +24,7 @@ class Van {
 
         this.showclock = false
         this.cend = 0
-        this.ccols = [ '#0f0', '#ff0','#ffa500', '#f00', '#000']
+        this.ccols = [ '#0f0', '#fff62c','#ffa500', '#f00', '#000']
         this.cindex = 0
         this.cinc = 1
         this.tinc = Math.floor(5000 / 360)
@@ -91,7 +92,7 @@ class Van {
 
         // wheels rotate if we're moving
         if(this.ismoving) {
-            this.rot -= 2
+            this.rot -= this.rotinc
             if(this.rot < -360) {
                 this.rot = 0
             }
